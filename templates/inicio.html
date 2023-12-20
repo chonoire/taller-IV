@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+        <h1>Detalles del Usuario</h1>
+        
+        <button id="mostrarDetalles">Mostrar Detalles</button>
+    
+        <div id="detallesUsuario" style="display: none;">
+            {% if usuario %}
+                <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+                <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+                <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
+                <p><strong>Roles:</strong> {{ usuario.get_roles() }}</p>
+            {% else %}
+                <p>Usuario no encontrado.</p>
+            {% endif %}
+        </div>
+
+
+    <section id="main-content">
+        <article>
+            <p> <a href='/logout'>cerrar sesión</a> </p>
+        </article>
+
+    </section>
+        
+        <script>
+            // Función para cambiar la visibilidad de los detalles del usuario
+            function toggleDetalles() {
+                var detallesUsuario = document.getElementById('detallesUsuario');
+                if (detallesUsuario) {
+                    var displayValue = detallesUsuario.style.display;
+                    detallesUsuario.style.display = (displayValue === 'none') ? 'block' : 'none';
+                }
+            }
+    
+            // Agregar un manejador de eventos al botón
+            document.getElementById('mostrarDetalles').addEventListener('click', toggleDetalles);
+        </script>
+    </body>
+    </html>
+    
