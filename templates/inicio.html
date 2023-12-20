@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class=".div-inicio">
         <h1>Detalles del Usuario</h1>
         
         <button id="mostrarDetalles">Mostrar Detalles</button>
@@ -22,14 +23,34 @@
                 <p>Usuario no encontrado.</p>
             {% endif %}
         </div>
-
-
     <section id="main-content">
         <article>
             <p> <a href='/logout'>cerrar sesión</a> </p>
         </article>
 
     </section>
+    </div>
+
+    <div class="div-inicio">
+        <h1>Formulario de Estudiante</h1>
+
+    <form method="post" action="{{ url_for('crear') }}">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" required><br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" name="apellido" required><br>
+
+        <label for="cedula">Cédula:</label>
+        <input type="number" name="cedula" required><br>
+        
+        <label for="curso">Curso:</label>
+        <input type="number" name="curso" required><br>
+
+
+        <button type="submit">Guardar</button>
+    </form>
+    </div>
         
         <script>
             // Función para cambiar la visibilidad de los detalles del usuario

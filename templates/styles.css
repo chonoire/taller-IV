@@ -11,3 +11,5 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.div-inicio { display: inline-block; width: 100px; height: 50px;}
