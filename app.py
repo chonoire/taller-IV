@@ -1,7 +1,8 @@
 # En app.py
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response
 from modelos import db, User, Estudiante
-from werkzeug.security import generate_password_hash, check_password_hash
+from reportlab.pdfgen import canvas
+import io
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "tu_clave_secreta"
@@ -74,9 +75,10 @@ def crear():
         apellido=request.form.get("apellido")
         cedula=request.form.get("cedula")
         curso=request.form.get("curso")
+        nota=request.form.get("nota")
 
         # Crear una nueva instancia de Estudiante
-        nuevo_estudiante = Estudiante(nombre = nombre, apellido = apellido, cedula = cedula, curso = curso)
+        nuevo_estudiante = Estudiante(nombre = nombre, apellido = apellido, cedula = cedula, curso = curso, nota=nota)
 
         # Agregar el estudiante a la base de datos
         db.session.add(nuevo_estudiante)
@@ -100,14 +102,51 @@ def editar(id):
         apellido=request.form.get("apellido")
         cedula=request.form.get("cedula")
         curso=request.form.get("curso")
+        nota=request.form.get("nota")
         #cargar la info
         estudiante.nombre= nombre
         estudiante.apellido = apellido
         estudiante.cedula = cedula
         estudiante.curso = curso
+        estudiante.nota = nota
         db.session.commit()
         return redirect(url_for("dashboard"))
     return render_template("editar.html", estudiante = estudiante)
+
+def generar_pdf():
+    # Crear un buffer en memoria para almacenar el PDF
+    buffer = io.BytesIO()
+
+    # Crear un documento PDF con reportlab
+    pdf = canvas.Canvas(buffer)
+    pdf.drawString(100, 750, "Informe de Notas Bajas")
+
+    # Obtener estudiantes con notas bajas (menores a 3)
+    estudiantes_notas_bajas = Estudiante.query.filter(Estudiante.nota < 3).all()
+
+    # Agregar información de estudiantes con notas bajas al PDF
+    y_position = 730
+    for estudiante in estudiantes_notas_bajas:
+        y_position -= 15
+        pdf.drawString(100, y_position, f"{estudiante.nombre} {estudiante.apellido}: {estudiante.nota}")
+
+    # Guardar el documento PDF
+    pdf.showPage()
+    pdf.save()
+
+    # Reiniciar el buffer y devolver los datos binarios del PDF
+    buffer.seek(0)
+    return buffer.read()
+
+# Ruta para el informe de notas bajas
+@app.route("/reporte_notas_bajas")
+def reporte_notas_bajas():
+    # Generar el PDF y devolverlo como respuesta
+    pdf_filename = 'informe_notas_bajas.pdf'
+    response = make_response(generar_pdf())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename={pdf_filename}'
+    return response
 
 if __name__ == "__main__":
     with app.app_context():

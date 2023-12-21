@@ -52,6 +52,7 @@
                 <th width="150px">Nombre</th>
                 <th width="150px">Apellido</th>
                 <th width="150px">Curso</th>
+                <th width="150px">Nota</th>
                 <th width="150px">Acciones</th>
             </tr>
             
@@ -63,6 +64,7 @@
                     <td>{{ estudiante.nombre }}</td>
                     <td>{{ estudiante.apellido }}</td>
                     <td>{{ estudiante.curso }}</td>
+                    <td>{{ estudiante.nota }}</td>
                     <td>
                         <button class="font-bold text-sky-600 pb-6">
                             <a href="{{ url_for('eliminar', id=estudiante.id) }}">eliminar</a>
@@ -107,10 +109,16 @@
             <label for="curso">Curso:</label>
             <input type="number" name="curso" placeholder="Curso" required><br>
 
+            <label for="curso">Nota:</label>
+            <input type="number" name="nota" placeholder="Nota" required><br>
 
             <button type="submit">Guardar</button>
         </form>
     </div>
+    
+    <p>
+        <a href="{{ url_for('reporte_notas_bajas') }}" target="_blank">Generar Informe PDF</a>
+    </p>
         
         <script>
             // Función para cambiar la visibilidad de los detalles del usuario

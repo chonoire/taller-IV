@@ -30,3 +30,5 @@ class Estudiante(db.Model):
     nombre = db.Column(db.String(50), nullable=False)
     apellido = db.Column(db.String(50), nullable=False)
     curso = db.Column(db.Integer, nullable=False)
+    nota = db.Column(db.Integer, nullable=False )
+

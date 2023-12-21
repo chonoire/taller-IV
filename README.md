@@ -1,4 +1,5 @@
-instalar lo siguiente en VS Code: pip install Flask pip install requests pip install Flask-SQLAlchemy
+instalar lo siguiente en VS Code: pip install Flask pip install requests pip install Flask-SQLAlchemy pip install reportlab 
+pip install Flask-PyPDF2
 
 luego debe crear un entorno vitual: 
 python3 -m venv .venv 
