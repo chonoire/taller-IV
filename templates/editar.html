@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar</title>
+</head>
+<body>
+    <h1>Editar datos del estudiante</h1>
+                <form action="{{ url_for('editar', id=estudiante.id) }}" method="post">
+                    <div>
+                    <label>EDITAR</label><br><br>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" placeholder="Nombre" value="{{estudiante.nombre}}"/><br>
+        
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" name="apellido" placeholder="Apellido" value="{{estudiante.apellido}}"/><br>
+        
+                        <label for="cedula">Cédula:</label>
+                        <input type="number" name="cedula" placeholder="Cédula" value="{{estudiante.cedula}}"/><br>
+        
+                        <label for="curso">Curso:</label>
+                        <input type="text" name="curso" placeholder="Curso" value="{{estudiante.curso}}"/><br>
+                    </div>
+                    <br>
+
+                    <button type="submit" >
+                        Editar
+                    </button>
+                    <button>
+                        <a href="{{ url_for('dashboard') }}">Cancelar</a>
+                    </button>
+                </form>
+</body>
+</html>

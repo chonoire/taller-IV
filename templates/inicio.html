@@ -23,33 +23,55 @@
                 <p>Usuario no encontrado.</p>
             {% endif %}
         </div>
+
     <section id="main-content">
         <article>
             <p> <a href='/logout'>cerrar sesión</a> </p>
         </article>
-
     </section>
     </div>
+    
+    <div>
+        <h1>Estudiantes</h1>
+    
+        {% for estudiante in estudiantes %}
+    
+            <li>
+                {{estudiante.cedula}} {{estudiante.nombre}} {{estudiante.apellido}} {{estudiante.curso}}
+    
+                <button class="font-bold text-sky-600 pb-6">
+                    <a href="{{ url_for('eliminar', id = estudiante.id) }}">eliminar</a>
+                </button>
+                <button class="font-bold text-sky-600 pb-6">
+                    <a href="{{ url_for('editar', id = estudiante.id) }}">editar</a>
+                </button>
+            </li>
+    
+        {% endfor %}
+    </div>
+    <br>
 
-    <div class="div-inicio">
-        <h1>Formulario de Estudiante</h1>
+    <button id="mostrarFormulario">Agregar Estudiante</button>
 
-    <form method="post" action="{{ url_for('crear') }}">
-        <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" required><br>
+    <div id="detallesForm" style="display: none;">
+            <h1>Formulario de Estudiante</h1>
 
-        <label for="apellido">Apellido:</label>
-        <input type="text" name="apellido" required><br>
+        <form method="post" action="{{ url_for('crear') }}">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" placeholder="Nombre" required><br>
 
-        <label for="cedula">Cédula:</label>
-        <input type="number" name="cedula" required><br>
-        
-        <label for="curso">Curso:</label>
-        <input type="number" name="curso" required><br>
+            <label for="apellido">Apellido:</label>
+            <input type="text" name="apellido" placeholder="Apellido" required><br>
+
+            <label for="cedula">Cédula:</label>
+            <input type="number" name="cedula" placeholder="Cédula" required><br>
+            
+            <label for="curso">Curso:</label>
+            <input type="number" name="curso" placeholder="Curso" required><br>
 
 
-        <button type="submit">Guardar</button>
-    </form>
+            <button type="submit">Guardar</button>
+        </form>
     </div>
         
         <script>
@@ -64,6 +86,18 @@
     
             // Agregar un manejador de eventos al botón
             document.getElementById('mostrarDetalles').addEventListener('click', toggleDetalles);
+
+            ///////////////////////////////////////
+            function toggleDetallesForm() {
+                var detallesForm = document.getElementById('detallesForm');
+                if (detallesForm) {
+                    var displayValue = detallesForm.style.display;
+                    detallesForm.style.display = (displayValue === 'none') ? 'block' : 'none';
+                }
+            }
+    
+            // Agregar un manejador de eventos al botón
+            document.getElementById('mostrarFormulario').addEventListener('click', toggleDetallesForm);
         </script>
     </body>
     </html>

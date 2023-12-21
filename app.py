@@ -37,8 +37,9 @@ def dashboard():
         # Recuperar detalles del usuario actualmente autenticado
         username = session["username"]
         usuario = User.query.filter_by(username=username).first()
+        estudiantes = Estudiante.query.all()
 
-        return render_template("inicio.html", usuario=usuario)
+        return render_template("inicio.html", usuario=usuario, estudiantes = estudiantes)
     else:
         return redirect(url_for("login"))
 
@@ -48,7 +49,7 @@ def logout():
     flash("Has cerrado sesión", "info")
     return redirect(url_for("login"))
 
-@app.route('/crear', methods=['GET', 'POST'])
+@app.route('/crear', methods=['POST'])
 def crear():
     if request.method == 'POST':
         # Obtener datos del formulario
@@ -63,11 +64,33 @@ def crear():
         # Agregar el estudiante a la base de datos
         db.session.add(nuevo_estudiante)
         db.session.commit()
+        return redirect(url_for("dashboard"))
 
-        # Redirigir a la página principal
-        return redirect(url_for('inicio'))
+@app.route("/eliminar/<id>")
+def eliminar(id):
+    #eliminar por id
+    estudiante = Estudiante.query.get(id)
+    #eliminar
+    db.session.delete(estudiante)
+    db.session.commit()
+    return redirect(url_for("dashboard"))
 
-    return render_template('inicio.html')
+@app.route("/editar/<id>", methods=["GET","POST"])
+def editar(id):
+    estudiante = Estudiante.query.get(id)
+    if request.method == "POST":
+        nombre= request.form.get("nombre")
+        apellido=request.form.get("apellido")
+        cedula=request.form.get("cedula")
+        curso=request.form.get("curso")
+        #cargar la info
+        estudiante.nombre= nombre
+        estudiante.apellido = apellido
+        estudiante.cedula = cedula
+        estudiante.curso = curso
+        db.session.commit()
+        return redirect(url_for("dashboard"))
+    return render_template("editar.html", estudiante = estudiante)
 
 if __name__ == "__main__":
     with app.app_context():
