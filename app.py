@@ -37,9 +37,26 @@ def dashboard():
         # Recuperar detalles del usuario actualmente autenticado
         username = session["username"]
         usuario = User.query.filter_by(username=username).first()
-        estudiantes = Estudiante.query.all()
+        page = request.args.get('page', 1, type=int)
 
-        return render_template("inicio.html", usuario=usuario, estudiantes = estudiantes)
+        # Obtener los criterios de filtrado desde los parámetros de la solicitud
+        filtro_nombre = request.args.get('filtro_nombre', '', type=str)
+        filtro_apellido = request.args.get('filtro_apellido', '', type=str)
+        filtro_curso = request.args.get('filtro_curso', '', type=str)
+        filtro_cedula = request.args.get('filtro_cedula', '', type=str)
+
+        # Filtrar estudiantes según los criterios
+        estudiantes_query = Estudiante.query.filter(Estudiante.nombre.ilike(f'%{filtro_nombre}%'))
+        estudiantes_query = estudiantes_query.filter(Estudiante.apellido.ilike(f'%{filtro_apellido}%'))
+        estudiantes_query = estudiantes_query.filter(Estudiante.curso.ilike(f'%{filtro_curso}%'))
+        estudiantes_query = estudiantes_query.filter(Estudiante.cedula.ilike(f'%{filtro_cedula}%'))
+
+        # Paginar los resultados
+        estudiantes_paginados = estudiantes_query.paginate(page=page, per_page=10)
+
+        return render_template('inicio.html', usuario=usuario, estudiantes=estudiantes_paginados,
+                               filtro_nombre=filtro_nombre, filtro_curso=filtro_curso,
+                               filtro_cedula=filtro_cedula, filtro_apellido=filtro_apellido)
     else:
         return redirect(url_for("login"))
 

@@ -30,25 +30,63 @@
         </article>
     </section>
     </div>
-    
+
+    <h1>Listado de Estudiantes</h1>
+
+        <!-- Formulario para filtros -->
+    <form action="{{ url_for('dashboard') }}" method="get">
+        <label for="filtro_nombre"></label>
+        <input type="text" name="filtro_nombre" value="{{ filtro_nombre }}" placeholder="Filtrar por nombre"> <br>
+        <label for="filtro_apellido"></label>
+        <input type="text" name="filtro_apellido" value="{{ filtro_apellido }}" placeholder="Filtrar por apellido"><br>
+        <label for="filtro_cedula"></label>
+        <input type="text" name="filtro_cedula" value="{{ filtro_cedula }}" placeholder="Filtrar por cedula"><br>
+        <label for="filtro_curso"></label>
+        <input type="text" name="filtro_curso" value="{{ filtro_curso }}" placeholder="Filtrar por curso"><br><br>
+        <button type="submit">Filtrar</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th width="150px">Cédula</th>
+                <th width="150px">Nombre</th>
+                <th width="150px">Apellido</th>
+                <th width="150px">Curso</th>
+                <th width="150px">Acciones</th>
+            </tr>
+            
+        </thead>
+        <tbody>
+            {% for estudiante in estudiantes.items %}
+                <tr>
+                    <td>{{ estudiante.cedula }}</td>
+                    <td>{{ estudiante.nombre }}</td>
+                    <td>{{ estudiante.apellido }}</td>
+                    <td>{{ estudiante.curso }}</td>
+                    <td>
+                        <button class="font-bold text-sky-600 pb-6">
+                            <a href="{{ url_for('eliminar', id=estudiante.id) }}">eliminar</a>
+                        </button>
+                        <button class="font-bold text-sky-600 pb-6">
+                            <a href="{{ url_for('editar', id=estudiante.id) }}">editar</a>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
     <div>
-        <h1>Estudiantes</h1>
-    
-        {% for estudiante in estudiantes %}
-    
-            <li>
-                {{estudiante.cedula}} {{estudiante.nombre}} {{estudiante.apellido}} {{estudiante.curso}}
-    
-                <button class="font-bold text-sky-600 pb-6">
-                    <a href="{{ url_for('eliminar', id = estudiante.id) }}">eliminar</a>
-                </button>
-                <button class="font-bold text-sky-600 pb-6">
-                    <a href="{{ url_for('editar', id = estudiante.id) }}">editar</a>
-                </button>
-            </li>
-    
-        {% endfor %}
+        {% if estudiantes.has_prev %}
+            <a href="{{ url_for('dashboard', page=estudiantes.prev_num, filtro_nombre=filtro_nombre, filtro_curso=filtro_curso) }}">Anterior</a>
+        {% endif %}
+        Página {{ estudiantes.page }} de {{ estudiantes.pages }}
+        {% if estudiantes.has_next %}
+            <a href="{{ url_for('dashboard', page=estudiantes.next_num, filtro_nombre=filtro_nombre, filtro_curso=filtro_curso) }}">Siguiente</a>
+        {% endif %}
     </div>
+
     <br>
 
     <button id="mostrarFormulario">Agregar Estudiante</button>
